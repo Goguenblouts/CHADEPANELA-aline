@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <title>Chá de Panela</title>
+  <title>Convite - Chá de Panela</title>
   <style>
     body {
       font-family: 'Times New Roman', sans-serif;
@@ -106,25 +106,47 @@
 
     <p>Confirme sua presença abaixo:</p>
     <input type="text" id="nomeInput" placeholder="Seu Nome">
-    <a href="#" id="confirmarPresenca">Confirmar Presença</a>
 
-</div>
+    <div>
+      <label>Voce poderá comparecer?</label>
+      <label for="comparecerSim"><input type="checkbox" id="comparecerSim" value="sim"> Sim!</label>
+      <label for="comparecerNao"><input type="checkbox" id="comparecerNao" value="nao"> Não!</label>
+    </div>
+
+    <a href="#" id="confirmarPresenca">Enviar</a>
+  </div>
 
   <script>
     document.getElementById('confirmarPresenca').addEventListener('click', function() {
       const nome = document.getElementById('nomeInput').value;
+      const comparecerSim = document.getElementById('comparecerSim');
+      const comparecerNao = document.getElementById('comparecerNao');
 
       if (nome) {
-        const confirmacao = confirm(`Presença confirmada!\nNome: ${nome}`);
+        let mensagem = `Nome: ${nome}\n`;
+
+        if (comparecerSim.checked && !comparecerNao.checked) {
+          mensagem += "Sim, ficarei Feliz em comparecer!";
+        } else if (!comparecerSim.checked && comparecerNao.checked) {
+          mensagem += "Infelizmente, não poderei comparecer.";
+        } else {
+          alert('Por favor, selecione apenas uma opção.');
+          return; // Não continua o processamento se mais de uma opção estiver selecionada
+        }
+
+        const confirmacao = confirm(mensagem);
+
         if (confirmacao) {
           const numeroWhatsapp = '+5562986369673'; // Substitua pelo número real
-          window.location.href = `https://api.whatsapp.com/send?phone=${numeroWhatsapp}&text=Presença%20confirmada!%0ANome:%20${nome}`;
+          const mensagemWhatsapp = encodeURIComponent(`\n${mensagem}`);
+          window.location.href = `https://api.whatsapp.com/send?phone=${numeroWhatsapp}&text=${mensagemWhatsapp}`;
         }
       } else {
         alert('Por favor, preencha todas as informações.');
       }
     });
   </script>
+  
   
 </body>
 </html>
